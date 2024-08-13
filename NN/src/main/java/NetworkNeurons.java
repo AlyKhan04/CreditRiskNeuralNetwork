@@ -2,8 +2,57 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NetworkNeurons {
-    List<Neuron> neuronNet = Arrays.asList(
-            new Neuron(), new Neuron(), new Neuron(), /* input node */
-            new Neuron(), new Neuron(),               /* hidden node */
-            new Neuron());                           /* Output Node */
+    private static final int NUM_INPUTS = 27;   // Number of features in dataset
+    private static final int NUM_HIDDEN_NEURONS = 10; // Number of neurons in the hidden layer (adjustable)
+    private static final int NUM_OUTPUTS = 1;  // Number of output neurons
+
+    List<Neuron> inputLayer = Arrays.asList(
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS),
+            new Neuron(NUM_INPUTS)
+            // 27 instances since there are 27 columns of the dataset
+    );
+
+    List<Neuron> hiddenLayer = Arrays.asList(
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS),
+            new Neuron(NUM_HIDDEN_NEURONS)
+            // Initialize neurons for hidden layer
+            // Number of neurons in the hidden layer can vary
+    );
+
+    List<Neuron> outputLayer = Arrays.asList(
+            new Neuron(NUM_OUTPUTS) // Output neuron(s)
+    );
 }
