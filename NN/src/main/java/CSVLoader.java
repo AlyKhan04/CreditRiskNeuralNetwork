@@ -1,4 +1,7 @@
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,17 +9,23 @@ import java.util.List;
 
 public class CSVLoader {
 
-    public static double[][] loadData(String filename) throws IOException {
+    public static double[][] loadData(String filename) {
         List<double[]> dataList = new ArrayList<>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(filename))) {
+        // Create CSVReader using CSVReaderBuilder
+        try (CSVReader reader = new CSVReaderBuilder(new FileReader(filename)).withSkipLines(1).build()) {
             String[] nextLine;
-            boolean firstLine = true;
 
-            while ((nextLine = reader.readNext()) != null) {
-                if (firstLine) {
-                    firstLine = false; // Skip header if present
-                    continue;
+            // Iterate through lines in the CSV
+            while (true) {
+                try {
+                    nextLine = reader.readNext();
+                } catch (CsvValidationException e) {
+                    e.printStackTrace();
+                    continue; // Skip invalid line
+                }
+                if (nextLine == null) {
+                    break;
                 }
                 double[] data = new double[nextLine.length];
                 for (int i = 0; i < nextLine.length; i++) {
@@ -24,6 +33,8 @@ public class CSVLoader {
                 }
                 dataList.add(data);
             }
+        } catch (IOException e) {
+            e.printStackTrace();  // Handle IO exceptions
         }
 
         return dataList.toArray(new double[0][0]);
