@@ -21,7 +21,7 @@ public class Runner {
         int k = 5; // Number of folds
         int epochs = 1000;
         double learningRate = 0.01;
-
+        //Need to increase accuracy
         KCrossValidation.kFoldSplit(X, y, k, neuralNetwork, epochs, learningRate);
     }
 }
