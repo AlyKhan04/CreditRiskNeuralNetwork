@@ -18,7 +18,7 @@ public class Neuron {
     // Method to calculate the neuron's output
     public double activate(double[] inputs) {
         double z = 0.0;  // Variable to hold the weighted sum
-        for (int i = 0; i < inputs.length; i++) {
+        for (int i = 0; i < inputs.length-1; i++) {
             z += inputs[i] * weights[i];  // Calculate weighted sum
         }
         z += bias;  // Add bias to the weighted sum
