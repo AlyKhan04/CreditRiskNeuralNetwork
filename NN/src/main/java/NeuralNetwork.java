@@ -125,7 +125,7 @@ public class NeuralNetwork {
         plot.setRenderer(renderer);
 
         JFrame frame = new JFrame("Training Metrics");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Use DISPOSE_ON_CLOSE instead of EXIT_ON_CLOSE
         frame.setContentPane(new ChartPanel(chart));
         frame.pack();
         frame.setVisible(true);
