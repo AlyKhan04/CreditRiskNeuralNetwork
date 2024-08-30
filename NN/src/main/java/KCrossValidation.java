@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KCrossValidation {
+
+    //Splits the data into k folds, then trains the neural network on said factors then evaluates the models.
+    //Parameters: The X data, The Y variable, the created NeuralNetwork, the number of folds, the number of epochs and the learning rate
     public static void kFoldSplit(double[][] X, double[] y, int k, NeuralNetwork neuralNetwork, int epochs, double learningRate) {
         int foldSize = X.length / k;
 
@@ -36,7 +39,8 @@ public class KCrossValidation {
         }
     }
 
-    // Method to evaluate the model
+    // Method to evaluate the model. Updates the various parts of a confusion matrix.
+    //Parameters: NeuralNetwork, TestData and the testlabels
     public static void evaluateModel(NeuralNetwork neuralNetwork, double[][] testData, double[] testLabels) {
         int tp = 0, tn = 0, fp = 0, fn = 0;  // Variables to store counts for TP, TN, FP, FN
 
@@ -45,7 +49,7 @@ public class KCrossValidation {
             int prediction = (rawPrediction >= 0.5) ? 1 : 0;  // Threshold for binary classification
             int actual = (int) testLabels[i];
 
-            // Update TP, TN, FP, FN based on the prediction and actual values
+            // Updates TP, TN, FP, FN based on the prediction and actual values
             if (prediction == 1 && actual == 1) {
                 tp++;
             } else if (prediction == 0 && actual == 0) {
@@ -57,13 +61,13 @@ public class KCrossValidation {
             }
         }
 
-        // Calculate accuracy, precision, recall, and F1 score
+        // Calculates accuracy, precision, recall, and F1 score
         double accuracy = (double) (tp + tn) / (tp + tn + fp + fn);
         double precision = (tp + fp > 0) ? (double) tp / (tp + fp) : 0;
         double recall = (tp + fn > 0) ? (double) tp / (tp + fn) : 0;
         double f1Score = (precision + recall > 0) ? 2 * (precision * recall) / (precision + recall) : 0;
 
-        // Print the results
+        // Prints the results
         System.out.println("Accuracy: " + accuracy);
         System.out.println("Precision: " + precision);
         System.out.println("Recall: " + recall);

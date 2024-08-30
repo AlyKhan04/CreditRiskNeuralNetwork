@@ -13,31 +13,35 @@ import java.util.List;
 
 public class NeuralNetwork {
     private Layer[] layers; // Array to hold the layers in the network
-    private List<Double> losses = new ArrayList<>();
-    private List<Double> accuracies = new ArrayList<>();
+    private List<Double> losses = new ArrayList<>(); //Array to hold the losses
+    private List<Double> accuracies = new ArrayList<>(); //Array to hold the accuracies
 
+    //Initialises the neural network. Creates each layer..
+    //Parameters: layerSizes (the sizes of the various layers going into the neural network)
     public NeuralNetwork(int[] layerSizes) {
-        layers = new Layer[layerSizes.length - 1];  // Initializes an array of layers
+        layers = new Layer[layerSizes.length - 1];
 
-        // Creates each layer
         for (int i = 0; i < layerSizes.length - 1; i++) {
             layers[i] = new Layer(layerSizes[i + 1], layerSizes[i]);  // Each layer connects to the previous layer
         }
     }
 
-    // Method to perform a forward pass through the network
+    // Method to perform a forward pass through the network by calling forward in the layer class.
+    // Parameter: input going into the neuron
+    // Returns final neuron output.
     public double predict(double[] input) {
-        double[] output = input;  // Initializes the input as the output for the first layer
+        double[] output = input;
 
         // Pass the input through each layer
         for (Layer layer : layers) {
-            output = layer.forward(output);  // Forward the output from one layer as input to the next
+            output = layer.forward(output);
         }
-
         return output[0];  // Returns the final output
     }
 
-    // Method to train the network using backpropagation and gradient descent
+    //Method to train the neural network. Uses Back Propagation to train the network then calls to plot the accuracy and loss per epoch.
+    //Parameters: X variables, y variable, Number of epochs, Learning rate.
+    //Prints out the accuracy and loss of the epoch.
     public void train(double[][] X, double[] y, int epochs, double learningRate) {
         for (int epoch = 0; epoch < epochs; epoch++) {
             double totalLoss = 0.0;
@@ -46,11 +50,11 @@ public class NeuralNetwork {
             for (int i = 0; i < X.length; i++) {
                 double predicted = predict(X[i]);
 
-                // Calculate the error for the output neuron
+                // Calculates the error for the output neuron
                 double outputError = (predicted - y[i]) * predicted * (1 - predicted);
                 totalLoss += Math.pow(predicted - y[i], 2);
 
-                // Accuracy calculation
+                // Calculation of the accuracy (Since we use binary classification we round up and down).
                 if ((predicted >= 0.5 && y[i] == 1.0) || (predicted < 0.5 && y[i] == 0.0)) {
                     correctPredictions++;
                 }
@@ -58,7 +62,7 @@ public class NeuralNetwork {
                 double[] errors = new double[layers.length];
                 errors[layers.length - 1] = outputError;
 
-                // Backpropagate the error
+                // Back Propagates the error
                 for (int j = layers.length - 2; j >= 0; j--) {
                     errors[j] = 0.0;
                     for (int k = 0; k < layers[j].getNeurons().length; k++) {
@@ -70,7 +74,7 @@ public class NeuralNetwork {
                     }
                 }
 
-                // Update the weights and biases
+                // Updates the weights and biases
                 for (int j = 0; j < layers.length; j++) {
                     double[] inputs = (j == 0) ? X[i] : layers[j - 1].forward(X[i]);
                     for (int k = 0; k < layers[j].getNeurons().length; k++) {
@@ -92,9 +96,12 @@ public class NeuralNetwork {
             System.out.println("Epoch " + (epoch + 1) + " - Loss: " + averageLoss + ", Accuracy: " + accuracy);
         }
 
-        // Plot the loss and accuracy
+        // Plots the loss and accuracy
         plotLossAndAccuracy();
     }
+
+    //Method to calculate the loss anc accuracy of the neural network.
+    // uses JFreeChart to plot the graph.
     private void plotLossAndAccuracy() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
