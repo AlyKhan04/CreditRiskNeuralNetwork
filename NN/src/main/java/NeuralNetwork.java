@@ -95,14 +95,12 @@ public class NeuralNetwork {
 
             System.out.println("Epoch " + (epoch + 1) + " - Loss: " + averageLoss + ", Accuracy: " + accuracy);
         }
-
-        // Plots the loss and accuracy
-        plotLossAndAccuracy();
     }
 
     //Method to calculate the loss anc accuracy of the neural network.
-    // uses JFreeChart to plot the graph.
-    private void plotLossAndAccuracy() {
+    //Parameter: Number of folds so proper graphs can be printed
+    //Uses JFreeChart to plot the graph.
+    public void plotLossAndAccuracy(int foldNumber) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         for (int i = 0; i < losses.size(); i++) {
@@ -111,7 +109,7 @@ public class NeuralNetwork {
         }
 
         JFreeChart chart = ChartFactory.createLineChart(
-                "Training Metrics",
+                "Training Metrics - Fold " + foldNumber,
                 "Epoch",
                 "Value",
                 dataset,
@@ -124,10 +122,15 @@ public class NeuralNetwork {
         renderer.setSeriesPaint(1, Color.BLUE);   // Accuracy in blue
         plot.setRenderer(renderer);
 
-        JFrame frame = new JFrame("Training Metrics");
+        JFrame frame = new JFrame("Training Metrics - Fold " + foldNumber);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Use DISPOSE_ON_CLOSE instead of EXIT_ON_CLOSE
         frame.setContentPane(new ChartPanel(chart));
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public void clearMetrics() {
+        losses.clear();
+        accuracies.clear();
     }
 }

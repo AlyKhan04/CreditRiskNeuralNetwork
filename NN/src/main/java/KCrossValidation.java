@@ -1,29 +1,47 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class KCrossValidation {
 
     //Splits the data into k folds, then trains the neural network on said factors then evaluates the models.
     //Parameters: The X data, The Y variable, the created NeuralNetwork, the number of folds, the number of epochs and the learning rate
     public static void kFoldSplit(double[][] X, double[] y, int k, NeuralNetwork neuralNetwork, int epochs, double learningRate) {
-        int foldSize = X.length / k;
+        int foldSize = (X.length + k - 1) / k;
+        Set<Integer> testIndices = new HashSet<>();  // To track test indices across folds
 
         for (int fold = 0; fold < k; fold++) {
             List<double[]> trainFeatures = new ArrayList<>();
             List<Double> trainLabels = new ArrayList<>();
             List<double[]> testFeatures = new ArrayList<>();
             List<Double> testLabels = new ArrayList<>();
+            Set<Integer> currentTestIndices = new HashSet<>();  // To track current fold's test indices
 
             // Split data into training and testing sets for the current fold
             for (int i = 0; i < X.length; i++) {
                 if (i >= fold * foldSize && i < (fold + 1) * foldSize) {
                     testFeatures.add(X[i]);
                     testLabels.add(y[i]);
+                    currentTestIndices.add(i);
                 } else {
                     trainFeatures.add(X[i]);
                     trainLabels.add(y[i]);
                 }
             }
+
+            // Print out the indices used in the current fold's test set
+            System.out.println("Fold " + (fold + 1) + " test indices: " + currentTestIndices);
+
+            // Check if there's any overlap with previous folds
+            for (Integer index : currentTestIndices) {
+                if (testIndices.contains(index)) {
+                    System.out.println("Error: Index " + index + " is being used in multiple folds as a test case.");
+                }
+            }
+
+            // Add current fold's test indices to the overall set
+            testIndices.addAll(currentTestIndices);
 
             double[][] trainData = trainFeatures.toArray(new double[0][0]);
             double[] trainTargets = trainLabels.stream().mapToDouble(Double::doubleValue).toArray();
@@ -36,8 +54,18 @@ public class KCrossValidation {
 
             // Evaluate the model on the test data
             evaluateModel(neuralNetwork, testData, testTargets);
+
+            // Plot results for this fold
+            neuralNetwork.plotLossAndAccuracy(fold + 1); // Increment fold number for display
+        }
+
+        // Final check: Ensure every data point has been used in a test set exactly once
+        if (testIndices.size() != X.length) {
+            System.out.println("Error: Not all data points were included in a test set.");
         }
     }
+
+
 
     // Method to evaluate the model. Updates the various parts of a confusion matrix.
     //Parameters: NeuralNetwork, TestData and the testlabels
