@@ -18,7 +18,8 @@ True Negatives (TN):<em> Number </em> <br>
 False Positives (FP):<em> Number </em> <br>
 False Negatives (FN):<em> Number </em> <br>
 7. A graph plotting the accuracy vs loss per epoch in each fold: <br>
-/Users/alykhan/Desktop/Screenshot 2024-09-03 at 5.28.46 PM.png
+<img width="1019" alt="Screenshot 2024-09-03 at 5 28 46 PM" src="https://github.com/user-attachments/assets/304ee5e0-e1b9-4fe8-adee-ba426170ea9f">
+
 All of these factors allow for indepth analysis of the models performance any given parameter choice. <br>
 
 ## How to download
@@ -29,6 +30,7 @@ All of these factors allow for indepth analysis of the models performance any gi
 5. Run the project and enjoy.
 
 ## Findings
-The model is very good at predicting negative values (where the loan is rejected) due to the abundance of datapoints in the dataset. However, due to the class imbalance in the set (80% loan rejected to 20% of loans accepted), the model is worse at predicting positive instances, even when random oversampling is implemented. <br>
+The model is very good at predicting negative values (where the loan is rejected) due to the abundance of datapoints in the dataset. However, due to the class imbalance in the set (80% loan rejected to 20% of loans accepted), the model is worse at predicting positive instances, even when random oversampling is implemented. The model can be improved by implementing SMOTE or having a more balanced set of data to use. <br>
 The model has high accuracy and precision (ranging from 70-90%) which is good as it predicts most values accurately. <br>
-
+The in later folds, the model's accuracy does not change much, indicating the model has a stable perfomance throughout the folds and is not overfitting. <br>
+Overall this project was a good learning experience in creating neural networks from scratch and I look forward to creating more complex models in the future. <br> 
