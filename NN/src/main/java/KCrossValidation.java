@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class KCrossValidation {
 
@@ -9,46 +6,31 @@ public class KCrossValidation {
     //Parameters: The X data, The Y variable, the created NeuralNetwork, the number of folds, the number of epochs and the learning rate
     public static void kFoldSplit(double[][] X, double[] y, int k, NeuralNetwork neuralNetwork, int epochs, double learningRate) {
         int foldSize = (X.length + k - 1) / k;
-        Set<Integer> testIndices = new HashSet<>();  // To track test indices across folds
 
         for (int fold = 0; fold < k; fold++) {
             List<double[]> trainFeatures = new ArrayList<>();
             List<Double> trainLabels = new ArrayList<>();
             List<double[]> testFeatures = new ArrayList<>();
             List<Double> testLabels = new ArrayList<>();
-            Set<Integer> currentTestIndices = new HashSet<>();  // To track current fold's test indices
 
             // Split data into training and testing sets for the current fold
             for (int i = 0; i < X.length; i++) {
                 if (i >= fold * foldSize && i < (fold + 1) * foldSize) {
                     testFeatures.add(X[i]);
                     testLabels.add(y[i]);
-                    currentTestIndices.add(i);
                 } else {
                     trainFeatures.add(X[i]);
                     trainLabels.add(y[i]);
                 }
             }
 
-            // Print out the indices used in the current fold's test set
-            System.out.println("Fold " + (fold + 1) + " test indices: " + currentTestIndices);
-
-            // Check if there's any overlap with previous folds
-            for (Integer index : currentTestIndices) {
-                if (testIndices.contains(index)) {
-                    System.out.println("Error: Index " + index + " is being used in multiple folds as a test case.");
-                }
-            }
-
-            // Add current fold's test indices to the overall set
-            testIndices.addAll(currentTestIndices);
-
             double[][] trainData = trainFeatures.toArray(new double[0][0]);
             double[] trainTargets = trainLabels.stream().mapToDouble(Double::doubleValue).toArray();
 
             double[][] testData = testFeatures.toArray(new double[0][0]);
             double[] testTargets = testLabels.stream().mapToDouble(Double::doubleValue).toArray();
-
+            //randomUndersample(trainFeatures,trainLabels);
+            randomOversample(trainFeatures, trainLabels);
             // Train the neural network on the training data
             neuralNetwork.train(trainData, trainTargets, epochs, learningRate);
 
@@ -56,15 +38,41 @@ public class KCrossValidation {
             evaluateModel(neuralNetwork, testData, testTargets);
 
             // Plot results for this fold
-            neuralNetwork.plotLossAndAccuracy(fold + 1); // Increment fold number for display
-        }
-
-        // Final check: Ensure every data point has been used in a test set exactly once
-        if (testIndices.size() != X.length) {
-            System.out.println("Error: Not all data points were included in a test set.");
+            neuralNetwork.plotLossAndAccuracy(fold + 1);
         }
     }
 
+    //Class implements oversampling
+    //Randomly duplicates positive samples due to the class imbalance
+    //Parameters: List of features and list of labels
+    private static void randomOversample(List<double[]> features, List<Double> labels) {
+        int positiveCount = 0;
+        int negativeCount = 0;
+
+        for (double label : labels) {
+            if (label == 1.0) positiveCount++;
+            else negativeCount++;
+        }
+
+        int maxCount = Math.max(positiveCount, negativeCount);
+        Random random = new Random();
+
+        while (positiveCount < maxCount || negativeCount < maxCount) {
+            for (int i = 0; i < labels.size(); i++) {
+                double label = labels.get(i);
+                if (label == 1.0 && positiveCount < maxCount) {
+                    features.add(features.get(i));
+                    labels.add(label);
+                    positiveCount++;
+                } else if (label == 0.0 && negativeCount < maxCount) {
+                    features.add(features.get(i));
+                    labels.add(label);
+                    negativeCount++;
+                }
+                if (positiveCount == maxCount && negativeCount == maxCount) break;
+            }
+        }
+    }
 
 
     // Method to evaluate the model. Updates the various parts of a confusion matrix.
