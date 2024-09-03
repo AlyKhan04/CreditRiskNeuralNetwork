@@ -18,8 +18,17 @@ True Negatives (TN):<em> Number </em> <br>
 False Positives (FP):<em> Number </em> <br>
 False Negatives (FN):<em> Number </em> <br>
 7. A graph plotting the accuracy vs loss per epoch in each fold: <br>
-<img width="1023" alt="Screenshot 2024-09-03 at 2 42 07 PM" src="https://github.com/user-attachments/assets/749da9a6-7f0b-4f48-b2aa-8c3c0cd16872">
+/Users/alykhan/Desktop/Screenshot 2024-09-03 at 5.28.46 PM.png
 All of these factors allow for indepth analysis of the models performance any given parameter choice. <br>
 
 ## How to download
+1. Download the dataset from the following link: https://www.kaggle.com/datasets/laotse/credit-risk-dataset <br>
+2. Clean and PreProcess the dataset by downloading and running the.ipynb file called <em> CreditDefaultModel.ipynb </em> <br>
+3. Download the directory titled NN and open it in any IDE.<br>
+4. Change the variable filename to the path of the standardized_data.csv that CreditDefaultModel.ipynb created. <br>
+5. Run the project and enjoy.
+
+## Findings
+The model is very good at predicting negative values (where the loan is rejected) due to the abundance of datapoints in the dataset. However, due to the class imbalance in the set (80% loan rejected to 20% of loans accepted), the model is worse at predicting positive instances, even when random oversampling is implemented. <br>
+The model has high accuracy and precision (ranging from 70-90%) which is good as it predicts most values accurately. <br>
 
