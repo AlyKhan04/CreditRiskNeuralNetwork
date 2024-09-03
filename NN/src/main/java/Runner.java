@@ -16,12 +16,12 @@ public class Runner {
         double[] y = dataset.labels;
 
         // Initializes the number of input, hidden, and output neurons
-        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{25, 10, 1});
+        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{25, 15, 1});
 
         // Performs K-Fold Cross Validation
         int k = 5; // Number of folds
-        int epochs = 100;
-        double learningRate = 0.01;
+        int epochs = 25;
+        double learningRate = 0.05;
         KCrossValidation.kFoldSplit(X, y, k, neuralNetwork, epochs, learningRate);
     }
 }
