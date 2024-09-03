@@ -29,8 +29,10 @@ public class KCrossValidation {
 
             double[][] testData = testFeatures.toArray(new double[0][0]);
             double[] testTargets = testLabels.stream().mapToDouble(Double::doubleValue).toArray();
-            //randomUndersample(trainFeatures,trainLabels);
-            randomOversample(trainFeatures, trainLabels);
+
+            // Clear metrics for this fold
+            neuralNetwork.clearMetrics();
+
             // Train the neural network on the training data
             neuralNetwork.train(trainData, trainTargets, epochs, learningRate);
 
@@ -41,6 +43,7 @@ public class KCrossValidation {
             neuralNetwork.plotLossAndAccuracy(fold + 1);
         }
     }
+
 
     //Class implements oversampling
     //Randomly duplicates positive samples due to the class imbalance
